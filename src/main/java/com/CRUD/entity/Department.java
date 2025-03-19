@@ -16,6 +16,7 @@ public class Department {
 	
 	private int code;
 	private String description;
+	private String departmentName;
 	private String status;
 	
 	@ManyToOne
@@ -27,19 +28,20 @@ public class Department {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Department(long id, int code, String description, String status, Category category) {
+	public Department(long id, int code, String description, String departmentName, String status, Category category) {
 		super();
 		this.id = id;
 		this.code = code;
 		this.description = description;
+		this.departmentName = departmentName;
 		this.status = status;
 		this.category = category;
 	}
 
 	@Override
 	public String toString() {
-		return "Department [id=" + id + ", code=" + code + ", description=" + description + ", status=" + status
-				+ ", category=" + category + "]";
+		return "Department [id=" + id + ", code=" + code + ", description=" + description + ", departmentName="
+				+ departmentName + ", status=" + status + ", category=" + category + "]";
 	}
 
 	public long getId() {
@@ -66,6 +68,14 @@ public class Department {
 		this.description = description;
 	}
 
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+
 	public String getStatus() {
 		return status;
 	}
@@ -81,6 +91,6 @@ public class Department {
 	public void setCategory(Category category) {
 		this.category = category;
 	}
-	
+
 	
 }

@@ -12,4 +12,6 @@ public interface RoleService {
 	
 	public Role getbyid(long id);
 	
+	public void deletedata(long id);
+	
 }

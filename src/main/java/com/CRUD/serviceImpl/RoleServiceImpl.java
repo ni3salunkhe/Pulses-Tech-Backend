@@ -33,4 +33,10 @@ public class RoleServiceImpl implements RoleService{
 		return roleRepository.findById(id).orElse(null);
 	}
 
+	@Override
+	public void deletedata(long id) {
+		// TODO Auto-generated method stub
+		roleRepository.deleteById(id);
+	}
+
 }

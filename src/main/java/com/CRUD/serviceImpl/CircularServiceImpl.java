@@ -33,4 +33,17 @@ public class CircularServiceImpl implements CircularService{
 		return circularsRepository.findById(id).orElse(null);
 	}
 
+	@Override
+	public void deletedata(long id) {
+		
+		circularsRepository.deleteById(id);
+		
+	}
+
+	@Override
+	public boolean isCircularAlreadyReferenced(Circular circular) {
+		// TODO Auto-generated method stub
+		return circularsRepository.existsByReferncecircular(circular);
+	}
+
 }

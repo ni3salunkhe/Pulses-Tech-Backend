@@ -7,5 +7,7 @@ import com.CRUD.entity.Circular;
 
 @Repository
 public interface CircularsRepository extends JpaRepository<Circular, Long>{
-
+	
+	 boolean existsByReferncecircular(Circular circular);
+	
 }

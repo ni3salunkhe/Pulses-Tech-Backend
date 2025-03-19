@@ -1,5 +1,7 @@
 package com.CRUD.serviceImpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,18 @@ public class DepartmentServiceImpl implements DepartmentService{
 	public Department getbyid(long id) {
 		
 		return departmentRepository.findById(id).orElse(null);
+	}
+
+	@Override
+	public List<Department> getdata() {
+		// TODO Auto-generated method stub
+		return departmentRepository.findAll();
+	}
+
+	@Override
+	public void deletedata(long id) {
+		// TODO Auto-generated method stub
+		departmentRepository.deleteById(id);
 	}
 
 }

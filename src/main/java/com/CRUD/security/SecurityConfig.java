@@ -46,7 +46,7 @@ public class SecurityConfig {
             .requestMatchers("/api/auth/authenticate").permitAll()
             .requestMatchers("/api/auth/signup").permitAll()
             // Either allow all access to branches or require specific roles
-            .requestMatchers("/api/auth/**").authenticated()
+            .requestMatchers("/api/auth/**").permitAll()
             .anyRequest().authenticated()
         )
         .sessionManagement(session -> session

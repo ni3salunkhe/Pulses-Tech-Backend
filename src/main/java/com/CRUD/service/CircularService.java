@@ -12,4 +12,7 @@ public interface CircularService {
 	
 	public Circular getbyid(long id);
 	
+	public void deletedata(long id);
+	
+	 public boolean isCircularAlreadyReferenced(Circular circular);
 }

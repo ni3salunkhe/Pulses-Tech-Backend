@@ -43,19 +43,6 @@ public class UserServiceImpl implements UserDetailsService ,UserService{
 		return userRepository.findByUsername(username);
 	}
 
-//	@Override
-//	public UserDetails loadByUsername(String username) {
-//	    User user = userRepository.findByUsername(username);
-//	    if (user == null) {
-//	        throw new UsernameNotFoundException("User not found with username: " + username);
-//	    }
-//
-//	    Role userRole = roleService.getbyid(user.getRoleId());
-//	    System.out.println(userRole.getRoleName());
-//	    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + (userRole.getRoleName().toUpperCase()));
-//
-//	    return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), java.util.Collections.singletonList(authority));
-//	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -75,6 +62,18 @@ public class UserServiceImpl implements UserDetailsService ,UserService{
 	public List<User> getdata() {
 		// TODO Auto-generated method stub
 		return userRepository.findAll();
+	}
+
+	@Override
+	public void deletedata(long id) {
+		userRepository.deleteById(id);
+		
+	}
+
+	@Override
+	public User getbyid(long id) {
+		// TODO Auto-generated method stub
+		return userRepository.findById(id).orElse(null);
 	}
 
 
