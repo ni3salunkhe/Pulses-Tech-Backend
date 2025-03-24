@@ -2,6 +2,7 @@ package com.CRUD.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -41,13 +42,20 @@ public class SecurityConfig {
 				e.printStackTrace();
 			}
 		})
+        .headers(headers -> headers
+        	    .frameOptions(frameOptions -> frameOptions.disable()) // Allow iframes from the same origin
+        	)
+
         .authorizeHttpRequests(auth -> auth
         	
             .requestMatchers("/api/auth/authenticate").permitAll()
             .requestMatchers("/api/auth/signup").permitAll()
+//            .requestMatchers(HttpMethod.GET, "/circulars/published/**").permitAll()
+//            .requestMatchers("/api/auth/circulars/download/**").permitAll()
             // Either allow all access to branches or require specific roles
-            .requestMatchers("/api/auth/**").permitAll()
+            .requestMatchers("/api/auth/**").authenticated()
             .anyRequest().authenticated()
+            
         )
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -63,6 +71,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // Allow frontend origin
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow specific methods
         configuration.setAllowedHeaders(Arrays.asList("*")); // Allow all headers
+        configuration.setExposedHeaders(Arrays.asList(HttpHeaders.CONTENT_DISPOSITION)); 
         configuration.setAllowCredentials(true); // Allow credentials (e.g., cookies)
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

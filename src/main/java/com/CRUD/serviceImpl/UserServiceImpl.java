@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserDetailsService ,UserService{
 	        throw new UsernameNotFoundException("User not found with username: " + username);
 	    }
 
-	    Role userRole = roleService.getbyid(user.getRoleId());
+	    Role userRole = user.getRoleId();
 	   
 	    SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + (userRole.getRoleName().toUpperCase()));
 

@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.CRUD.dto.UserDto;
 import com.CRUD.entity.User;
+import com.CRUD.service.BranchesService;
+import com.CRUD.service.DepartmentService;
+import com.CRUD.service.RoleService;
 import com.CRUD.service.UserService;
 
 @RestController
@@ -26,6 +29,15 @@ import com.CRUD.service.UserService;
 public class UserController {
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private DepartmentService departmentService;
+	
+	@Autowired
+	private RoleService roleService;
+	
+	@Autowired
+	private BranchesService branchesService;
 	
 	private PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
 	
@@ -38,10 +50,11 @@ public class UserController {
 		user.setFname(userDto.getFname());
 		user.setLname(userDto.getLname());
 		user.setCreatedAt(userDto.getCreatedAt());
-		user.setDepartmentId(userDto.getDepartmentId());
+		user.setDepartmentId(departmentService.getbyid(userDto.getDepartmentId()));
 		user.setEmail(userDto.getEmail());
 		user.setPhone(userDto.getPhone());
-		user.setRoleId(userDto.getRoleId());
+		user.setBranch(branchesService.getbyid(userDto.getBranchid()));
+		user.setRoleId(roleService.getbyid(userDto.getRoleId()));
 		
 		User saveuser=userService.savedata(user);
 		return new ResponseEntity<User>(saveuser,HttpStatus.OK);
@@ -75,12 +88,13 @@ public class UserController {
 			user.setFname(userDto.getFname());
 			user.setLname(userDto.getLname());
 			user.setCreatedAt(userDto.getCreatedAt());
-			user.setDepartmentId(userDto.getDepartmentId());
+			user.setDepartmentId(departmentService.getbyid(userDto.getDepartmentId()));
 			user.setEmail(userDto.getEmail());
 			user.setPhone(userDto.getPhone());
-			user.setRoleId(userDto.getRoleId());
+			user.setRoleId(roleService.getbyid(userDto.getRoleId()));
+			user.setBranch(branchesService.getbyid(userDto.getBranchid()));
 			User saveuser=userService.savedata(user);
-			return new ResponseEntity<User>(user,HttpStatus.OK);
+			return new ResponseEntity<User>(saveuser,HttpStatus.OK);
 		}
 	}
 	
