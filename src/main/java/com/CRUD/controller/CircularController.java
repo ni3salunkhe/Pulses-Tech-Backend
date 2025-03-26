@@ -6,9 +6,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.DosFileAttributeView;
-import java.util.List;
 
+import java.util.List;
+import java.util.Set;
 
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +20,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.CRUD.dto.CircularDto;
-import com.CRUD.entity.Branches;
 import com.CRUD.entity.Circular;
+import com.CRUD.entity.User;
 import com.CRUD.service.BranchesService;
 import com.CRUD.service.CircularService;
 import com.CRUD.service.DepartmentService;
+import com.CRUD.service.UserService;
 
 import org.springframework.core.io.Resource;
 
@@ -46,6 +47,9 @@ public class CircularController {
 
 	@Autowired
 	private BranchesService branchesService;
+	
+	@Autowired
+	private UserService userService;
 
 	@PostMapping("/circular/create")
 	public ResponseEntity<Circular> saveData(@ModelAttribute CircularDto circularDto) {
@@ -72,6 +76,7 @@ public class CircularController {
 			circular.setStatus("under review");
 			circular.setPublishedDate(null);
 			circular.setComments(null);
+			circular.setAdminviewed(false);
 			circular.setBranches(branchesService.getbyid(circularDto.getBranchid()));
 			circular.setDepartment(departmentService.getbyid(circularDto.getDepartmentid()));
 
@@ -92,7 +97,11 @@ public class CircularController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
 
+	//---------------------------------------------------------------------------------------------
+	
+	// circular reject api for admin
 	@PutMapping("circular/reject/{id}")
 	public ResponseEntity<Circular> rejectcircular(@RequestBody CircularDto circularDto, @PathVariable long id) {
 		Circular circular = circularService.getbyid(id);
@@ -113,7 +122,10 @@ public class CircularController {
 			}
 		}
 	}
-
+	
+	//------------------------------------------------------------------------------------------------
+	
+	//circular published API for admin
 	@PutMapping("/circular/publish/{id}")
 	public ResponseEntity<Circular> publishCircular(@RequestBody CircularDto circularDto, @PathVariable long id) {
 		Circular circular = circularService.getbyid(id);
@@ -164,7 +176,57 @@ public class CircularController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
+	
+	//------------------------------------------------------------------------------------------------------
+	//admin circular checked or not
+	@PutMapping("/circular/viewed/{id}")
+	public ResponseEntity<Circular> Circularchekedbyadmin(@PathVariable long id){
+		
+		Circular circular=circularService.getbyid(id);
+		
+		if(circular==null)
+		{
+		return new ResponseEntity<Circular>(HttpStatus.NOT_FOUND);	
+		}
+		
+		else {
+			circular.setAdminviewed(true);
+			
+			Circular saveCircular=circularService.post(circular);
 
+			return new ResponseEntity<Circular>(saveCircular,HttpStatus.OK);	
+		}
+		
+	}
+	
+	//------------------------------------------------------------------------------------------------------
+	
+	@PutMapping("/circular/{id}/userview/{userid}")
+	public ResponseEntity<Circular> Circularviewedbyuser(@PathVariable long id,@PathVariable long userid){
+			
+		Circular circular=circularService.getbyid(id);
+		
+		User user=userService.getbyid(userid);
+		
+		if(circular==null && user==null)
+		{
+			return new ResponseEntity<Circular>(HttpStatus.NOT_FOUND);
+		}
+		else {
+			Set<Long> viewedUsers=circular.getViewdByUserSet();
+			if(!viewedUsers.contains(userid))
+			{
+				circular.addViewedByUser(userid);
+				Circular saveCircular=circularService.post(circular);
+				return new ResponseEntity<Circular>(saveCircular,HttpStatus.OK);
+			}
+			return new ResponseEntity<Circular>(HttpStatus.BAD_REQUEST);
+		}
+		
+	}
+	
+	//------------------------------------------------------------------------------------------------------
+	// data get by id  API
 	@GetMapping("/circular/{id}")
 	public ResponseEntity<Circular> getByIdData(@PathVariable long id) {
 		Circular circular = circularService.getbyid(id);
@@ -176,6 +238,8 @@ public class CircularController {
 	}
 
 	
+	//---------------------------------------------------------------------------------------
+	//file getting API
 	@GetMapping("/circulars/published/{filename}")
 	public ResponseEntity<Resource> getPublishedFile(@PathVariable String filename) {
 	    try {

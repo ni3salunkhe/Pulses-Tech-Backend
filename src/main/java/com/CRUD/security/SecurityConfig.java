@@ -53,7 +53,7 @@ public class SecurityConfig {
 //            .requestMatchers(HttpMethod.GET, "/circulars/published/**").permitAll()
 //            .requestMatchers("/api/auth/circulars/download/**").permitAll()
             // Either allow all access to branches or require specific roles
-            .requestMatchers("/api/auth/**").authenticated()
+            .requestMatchers("/api/auth/**").permitAll()
             .anyRequest().authenticated()
             
         )
